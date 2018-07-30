@@ -1,7 +1,11 @@
+const helpers = require('./server/db.js');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
+
+//Console helper function
+const pp = x => JSON.stringify(x, null, 2);
 
 module.exports = app;
 
@@ -27,3 +31,31 @@ if (!module.parent) {
     console.log(`Server is listening on ${PORT}`);
   });
 }
+
+
+apiRouter.get('/minions', (req, res, next) => {
+  const minions = helpers.getAllFromDatabase('minions');
+  res.send(minions);
+});
+
+apiRouter.post('/minions', (req, res, next) => {
+  const body = req.body;
+  const minion = body && body.name;
+  const title = body && body.title;
+  const salary = body && body.salary;
+  const weakness = body && body.weakness;
+  const newMinion = helpers.addToDatabase('minions', {name: minion, title: title, salary: salary, weaknesses: weakness});
+  res.status(201).send(newMinion);
+});
+
+apiRouter.get('/minions/:minionId', (req, res, next) => {
+  console.log(`>>>>>>>> request.body is: ${pp(req.params)}`);
+  const id = req.params.minionId;
+  const minion = helpers.getFromDatabaseById('minions', id);
+  if (minion !== -1) {
+    res.status(200).send(minion);
+  }
+  else {
+    res.status(404).send();
+  }
+});
