@@ -147,12 +147,8 @@ apiRouter.get('/meetings', (req, res, next) => {
 
 apiRouter.post('/meetings', (req, res, next) => {
   console.log(`>>>>>>>> request.body is: ${pp(req.body)}`);
-  const body = req.body;
-  const time = body && body.time;
-  const date = body && body.date;
-  const day = body && body.day;
-  const note = body && body.note;
-  const newMeeting = helpers.addToDatabase('meetings', {time: time, date: date, day: day, note: note});
+  const meeting = helpers.createMeeting();
+  const newMeeting = helpers.addToDatabase('meetings', meeting);
   res.status(201).send(newMeeting);
 });
 
