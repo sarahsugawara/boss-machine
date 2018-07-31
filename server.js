@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const millionCheck = require('./server/checkMillionDollarIdea.js');
 
 //Console helper function
 const pp = x => JSON.stringify(x, null, 2);
@@ -91,7 +92,7 @@ apiRouter.get('/ideas', (req, res, next) => {
   res.send(ideas);
 });
 
-apiRouter.post('/ideas', (req, res, next) => {
+apiRouter.post('/ideas', millionCheck, (req, res, next) => {
   const body = req.body;
   const name = body && body.name;
   const description = body && body.description;
