@@ -47,7 +47,7 @@ apiRouter.post('/minions', (req, res, next) => {
   const newMinion = helpers.addToDatabase('minions', {name: minion, title: title, salary: salary, weaknesses: weakness});
   res.status(201).send(newMinion);
 });
-
+//TODO: Missing validation for cases like 'notanId'
 apiRouter.get('/minions/:minionId', (req, res, next) => {
   console.log(`>>>>>>>> request.body is: ${pp(req.params)}`);
   const id = req.params.minionId;
@@ -59,3 +59,104 @@ apiRouter.get('/minions/:minionId', (req, res, next) => {
     res.status(404).send();
   }
 });
+
+apiRouter.put('/minions/:minionId', (req, res, next) => {
+  console.log(`>>>>>>>> request.body is: ${pp(req.body)}`);
+  const id = req.params.minionId;
+  const newMinion = req.body;
+  const updated = helpers.updateInstanceInDatabase('minions', newMinion);
+  if (updated !== null) {
+    res.status(200).send(updated);
+  }
+  else {
+    res.status(404).send();
+  }
+});
+
+apiRouter.delete('/minions/:minionId', (req, res, next) => {
+  console.log(`>>>>>>>> request.body is: ${pp(req.body)}`);
+  const id = req.params.minionId;
+  const deleted = helpers.deleteFromDatabasebyId('minions', id);
+  if (deleted) {
+    res.status(204).send(deleted);
+  }
+  else {
+    res.status(404).send();
+  }
+});
+
+//START API/IDEAS ROUTERS
+apiRouter.get('/ideas', (req, res, next) => {
+  const ideas = helpers.getAllFromDatabase('ideas');
+  res.send(ideas);
+});
+
+apiRouter.post('/ideas', (req, res, next) => {
+  const body = req.body;
+  const name = body && body.name;
+  const description = body && body.description;
+  const weeks = body && body.numWeeks;
+  const revenue = body && body.weeklyRevenue;
+  const newIdea = helpers.addToDatabase('ideas', {name: name, description: description, numWeeks: weeks, weeklyRevenue: revenue});
+  res.status(201).send(newIdea);
+});
+//TODO: Missing validation for cases like 'notanId'
+apiRouter.get('/ideas/:ideaId', (req, res, next) => {
+  console.log(`>>>>>>>> request.body is: ${pp(req.body)}`);
+  const id = req.params.ideaId;
+  const idea = helpers.getFromDatabaseById('ideas', id);
+  if (idea !== -1) {
+    res.status(200).send(idea);
+  }
+  else {
+    res.status(404).send();
+  }
+});
+
+apiRouter.put('/ideas/:ideaId', (req, res, next) => {
+  console.log(`>>>>>>>> request.body is: ${pp(req.body)}`);
+  const id = req.params.ideaId;
+  const newIdea = req.body && req.body;
+  const updated = helpers.updateInstanceInDatabase('ideas', newIdea);
+  if (updated !== null) {
+    res.status(200).send(updated);
+  }
+  else {
+    res.status(404).send();
+  }
+});
+
+apiRouter.delete('/ideas/:ideaId', (req, res, next) => {
+  console.log(`>>>>>>>> request.body is: ${pp(req.body)}`);
+  const id = req.params.ideaId;
+  const deleted = helpers.deleteFromDatabasebyId('ideas', id);
+  if (deleted) {
+    res.status(204).send(deleted);
+  }
+  else {
+    res.status(404).send();
+  }
+});
+
+//START API/MEETINGS ROUTERS
+apiRouter.get('/meetings', (req, res, next) => {
+  const meetings = helpers.getAllFromDatabase('meetings');
+  res.send(meetings);
+});
+
+apiRouter.post('/meetings', (req, res, next) => {
+  console.log(`>>>>>>>> request.body is: ${pp(req.body)}`);
+  const body = req.body;
+  const time = body && body.time;
+  const date = body && body.date;
+  const day = body && body.day;
+  const note = body && body.note;
+  const newMeeting = helpers.addToDatabase('meetings', {time: time, date: date, day: day, note: note});
+  res.status(201).send(newMeeting);
+});
+
+apiRouter.delete('/meetings', (req, res, next) => {
+  console.log(`>>>>>>>> request.body is: ${pp(req.body)}`);
+  const deleted = helpers.deleteAllFromDatabase('meetings');
+  res.status(204).send(deleted);
+})
