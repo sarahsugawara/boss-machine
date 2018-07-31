@@ -156,4 +156,46 @@ apiRouter.delete('/meetings', (req, res, next) => {
   console.log(`>>>>>>>> request.body is: ${pp(req.body)}`);
   const deleted = helpers.deleteAllFromDatabase('meetings');
   res.status(204).send(deleted);
+});
+
+//BEGIN BONUS ROUTES
+apiRouter.get('/minions/:minionId/work', (req, res, next) => {
+  const id = req.params.minionId;
+  const work = helpers.getFromDatabaseById('work', id);
+  if (work !== -1) {
+    res.status(200).send(work);
+  }
+  else {
+    res.status(404).send();
+  }
+});
+
+apiRouter.post('/minions/:minionId/work', (req, res, next) => {
+  console.log(`>>>>>>>> request.body is: ${pp(req.body)}`);
+  const body = req.body;
+  const title = body && body.title;
+  const description = body && body.description;
+  const hours = body && body.hours;
+  const minionId = body && body.minionId;
+  if (body, title, description, hours, minionId) {
+    const newWork = helpers.addToDatabase('work', {title: title, description: description, hours: hours, minionId: minionId});
+    res.status(201).send(newWork);
+  }
+  else {
+    res.status(404).send();
+  }
+});
+
+apiRouter.put('/minions/:minionId/work/:workId', (req, res, next) => {
+  // const minionId = req.params.minionId;
+  // const workId = req.params.minionId;
+  console.log(`>>>>>>>> request.body is: ${pp(req.body)}`);
+  const newWork = req.body;
+  const updated = helpers.updateInstanceInDatabase('work', newWork);
+  if (updated !== null) {
+    res.status(200).send(updated);
+  }
+  else {
+    res.status(404).send();
+  }
 })

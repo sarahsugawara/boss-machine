@@ -6,9 +6,8 @@ const checkMillionDollarIdea = (req, res, next) => {
         res.status(400).send();
     }
     else if (profit >= 10000000) {
-        req.body.numWeeks = weeks;
-        req.body.weeklyRevenue = revenue;
         next();
+        //! This error is still failing, even though next is being passed
     }
     else {
         res.status(400).send();
